@@ -1,19 +1,22 @@
 <script lang="ts">
-	import Launcher from "./launcher.svelte";
+	import type { PageServerData } from "./$types";
+	import Game from "./game.svelte";
+	
+	export let data: PageServerData;
 </script>
 
 <svelte:head>
-	<title>Home</title>
+	<title>Game</title>
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
 <div class="h-screen flex flex-col">
 	<div class="flex items-center justify-center flex-grow">
-		<div class="text-center">
-			<h1 class="mb-6 scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">wordy.<span class="text-accent">club</span></h1>
-			<p class="mb-2 text-xl">Ever wanted to play every wordle-variant at once? Join the club.</p>
-			<Launcher/>
-		</div>
+	{#if data.settings}
+		<Game settings={data.settings}/>
+	{:else}
+		<p>Invalid game.</p>
+	{/if}
 	</div>
 	<footer class="flex flex-col items-center justify-center w-full">
 		<p class="mt-4 text-center text-base">
