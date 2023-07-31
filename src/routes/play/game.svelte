@@ -72,18 +72,21 @@
 		A {$settings.sequential ? 'sequential' : 'non-sequential'} game with {$settings.boards} boards, and
 		{$settings.guesses} guesses
 	</p>
-	<!-- <div class="my-8 flex flex-row"> -->
-	{#if browser}
-		<Carousel let:loaded bind:this={carousel} particlesToScroll={1} particlesToShow={3}>
-			<!-- <div>1</div>
-			<div>2</div>
-			<div>3</div> -->
-			{#each { length: $settings.boards } as _, i (i)}
-				<Board {guess} guesses={guesses[i]} index={i} />
-			{/each}
-		</Carousel>
-	{/if}
-	<!-- </div> -->
+	<div class="w-full my-8 mx-4">
+		{#if browser}
+			<Carousel
+				let:loaded
+				bind:this={carousel}
+				particlesToScroll={1}
+				particlesToShow={3}
+				infinite={false}
+			>
+				{#each guesses as g, i}
+					<Board {guess} guesses={g} index={i} />
+				{/each}
+			</Carousel>
+		{/if}
+	</div>
 	<div>
 		<button on:click={popChar} data-key="backspace">{@html '<-'}</button>
 		<button on:click={enter} data-key="enter">{@html '->'}</button>

@@ -22,7 +22,7 @@
 </script>
 
 <div class="border border-primary border-solid text-center">
-  <p class="text-xl font-semibold">Border {index+1} {guess}</p>
+  <p class="text-xl font-semibold">Board {index+1} {guess}</p>
 	<div
 		class="border-4 p-2 mx-auto my-2 w-fit {solved >= 0
 			? 'border-green-500'
