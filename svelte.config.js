@@ -14,8 +14,8 @@ const config = {
 		adapter: adapter(),
 		alias: {
 			"@/*": "./src/*" 
-		}
-	}
+		},
+	},
 };
 
 export default config;

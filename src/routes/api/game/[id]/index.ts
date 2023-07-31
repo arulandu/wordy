@@ -1,8 +1,10 @@
 import { MersenneTwister } from '@/lib/random';
 import { words } from './../words';
+import { fromId } from '..';
 
-export const getAnswer = (id: number) => {
+export const getAnswers = (id: number) => {
+  const settings = fromId(id)
   const generator = new MersenneTwister(id)
-  const ind = Math.floor(generator.random() * words.length)
-  return words[ind]
+
+  return [...Array(settings.boards).keys()].map(() => words[Math.floor(generator.random() * words.length)])
 }

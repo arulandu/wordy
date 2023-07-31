@@ -1,7 +1,7 @@
 import { fromId } from "@/routes/api/game";
 import type { RequestHandler } from "./$types";
 import { json } from "@sveltejs/kit";
-import { getAnswer } from ".";
+import { getAnswers } from ".";
 import { words } from "../words";
 
 export const GET = (async ({ params }) => {
@@ -16,14 +16,15 @@ export const PUT = (async ({request, params}) => {
   const guess = body.guess.toLowerCase();
   if(words.indexOf(guess) == -1) return json({valid: false})
 
-  const answer = [...getAnswer(parseInt(id))]
-  const grade = [...guess].map((c:string, i:number) => {
+  const answers = getAnswers(parseInt(id)).map(a => [...a])
+  console.log(answers)
+  const grades = answers.map(answer => [...guess].map((c:string, i:number) => {
     if(answer[i] === c) return "G"
     const j = answer.indexOf(c)
     if(j == -1) return "B"
     answer[j] = "_"
     return "Y"
-  })
+  }).join(""))
   
-  return json({valid: true, grade: grade.join("")})
+  return json({valid: true, grades})
 }) satisfies RequestHandler

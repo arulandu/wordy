@@ -1,8 +1,10 @@
 <script lang="ts">
-	import type { PageServerData } from "./$types";
-	import Game from "./game.svelte";
-	
+	import type { PageServerData } from './$types';
+	import Game from './game.svelte';
+	import { settings } from './stores';
+
 	export let data: PageServerData;
+	settings.set(data.settings);
 </script>
 
 <svelte:head>
@@ -12,13 +14,13 @@
 
 <div class="h-screen flex flex-col">
 	<div class="flex items-center justify-center flex-grow">
-	{#if data.settings}
-		<Game settings={data.settings}/>
-	{:else}
-		<p>Invalid game.</p>
-	{/if}
+		{#if data.settings}
+			<Game />
+		{:else}
+			<p>Invalid game.</p>
+		{/if}
 	</div>
-	<footer class="flex flex-col items-center justify-center w-full">
+	<footer class="mb-4 flex flex-col items-center justify-center w-full">
 		<p class="mt-4 text-center text-base">
 			Made with 💖 by <a class=" underline" href="https://arulandu.com">Alvan Caleb Arulandu</a>
 		</p>
