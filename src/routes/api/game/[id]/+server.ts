@@ -13,17 +13,17 @@ export const GET = (async ({ params }) => {
 export const PUT = (async ({request, params}) => {
   const {id} = params
   const body = await request.json();
-  const guess = body.guess;
+  const guess = body.guess.toLowerCase();
   if(words.indexOf(guess) == -1) return json({valid: false})
 
   const answer = [...getAnswer(parseInt(id))]
   const grade = [...guess].map((c:string, i:number) => {
-    if(answer[i] === c) return "🟩"
+    if(answer[i] === c) return "G"
     const j = answer.indexOf(c)
-    if(j == -1) return "⬜"
+    if(j == -1) return "B"
     answer[j] = "_"
-    return "🟨"
+    return "Y"
   })
   
-  return json({valid: true, grade: grade.join()})
+  return json({valid: true, grade: grade.join("")})
 }) satisfies RequestHandler
