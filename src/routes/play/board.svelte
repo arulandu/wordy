@@ -6,6 +6,7 @@
 	export let guesses: { guess: string; grade: string }[];
 	export let index: number;
 	export let focused: boolean;
+	export let show = true;
 
 	export let solved = -1;
 	$: {
@@ -35,7 +36,7 @@
 		{#each { length: $settings.guesses } as _, gi}
 			{@const g = guesses[gi]}
 			<div class="max-w-2xl flex">
-				{#if gi < guesses.length && (solved < 0 || gi <= solved)}
+				{#if show && gi < guesses.length && (solved < 0 || gi <= solved)}
 					{#each g.guess as c, i}
 						<div
 							class="block w-16 aspect-square m-1 {gradeToClass[
@@ -45,7 +46,7 @@
 							<p class="text-2xl font-extrabold text-background">{c.toUpperCase()}</p>
 						</div>
 					{/each}
-				{:else if gi == guesses.length && solved < 0}
+				{:else if show && gi == guesses.length && solved < 0}
 					{#each guess.slice(0, 5).padEnd(5, ' ') as c, i}
 						<div
 							class="block w-16 aspect-square m-1 {gradeToClass[

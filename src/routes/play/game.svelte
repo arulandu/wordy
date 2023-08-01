@@ -21,6 +21,7 @@
 
 	let solved = Array($settings.boards).fill(-1)
 	$: win = solved.filter(x => x >= 0).length == $settings.boards;
+	$: closestUnsolvedBoard = solved.indexOf(-1) >= 0 ? solved.indexOf(-1) : solved.length;
 
 	const updateKeyboardMap = (
 		guesses: { guess: string; grade: string }[][],
@@ -115,7 +116,7 @@
 					class="m-2 w-8 h-8 rounded-full flex items-center justify-center border-2 border-solid {currentBoard ==
 					i
 						? 'border-primary'
-						: 'border-secondary'} {solved[i] >= 0 ? "bg-green-500" : ""}"
+						: 'border-secondary'} {solved[i] >= 0 && (!$settings.sequential || i <= closestUnsolvedBoard) ? "bg-green-500" : ""}"
 				>
 					<p class="text-foreground font-semibold">{i + 1}</p>
 				</button>
@@ -127,7 +128,7 @@
 			class="mt-4 h-[32rem] overflow-y-scroll pretty-scroll space-y-8"
 		>
 			{#each guesses as g, i (i)}
-				<Board {guess} guesses={g} index={i} focused={currentBoard == i} bind:solved={solved[i]} />
+				<Board {guess} guesses={g} index={i} show={!$settings.sequential || i <= closestUnsolvedBoard} focused={currentBoard == i} bind:solved={solved[i]} />
 			{/each}
 		</div>
 	</div>

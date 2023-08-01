@@ -18,7 +18,8 @@ export const PUT = (async ({request, params}) => {
   if(words.indexOf(guess) == -1) return json({valid: false})
 
   const answers = getAnswers(id).map(a => [...a])
-
+  console.log(answers.map(a => a.join("")))
+  
   const grades = answers.map(answer => [...guess].map((c:string, i:number) => {
     if(answer[i] === c) return "G"
     const j = answer.indexOf(c)
