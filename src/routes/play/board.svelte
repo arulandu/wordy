@@ -1,11 +1,13 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import { settings } from './stores';
 
 	export let guess: string;
 	export let guesses: { guess: string; grade: string }[];
   export let index: number;
+	export let focused: boolean;
 
-	let solved = -1;
+	export let solved = -1;
 	$: {
 		if (guesses.length > 0 && guesses[guesses.length - 1].grade === ''.padEnd(5, 'G')) {
 			solved = guesses.length - 1;
@@ -21,12 +23,12 @@
 	};
 </script>
 
-<div class="border border-primary border-solid text-center">
-  <p class="text-xl font-semibold">Board {index+1} {guess}</p>
+<div id="board-{index}" class="board min-h-full w-full text-center">
+  <p class="text-xl font-semibold">Board {index+1}</p>
 	<div
 		class="border-4 p-2 mx-auto my-2 w-fit {solved >= 0
 			? 'border-green-500'
-			: 'border-accent'} border-solid"
+			: 'border-accent'} {focused ? "border-opacity-100" : "border-opacity-0"} transition-all duration-150 border-solid"
 	>
 		{#each { length: $settings.guesses } as _, gi}
 			{@const g = guesses[gi]}

@@ -12,7 +12,7 @@
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<div class="h-screen flex flex-col">
+<div class="flex flex-col py-8">
 	<div class="flex items-center justify-center flex-grow">
 		{#if data.settings}
 			<Game />

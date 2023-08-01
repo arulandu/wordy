@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Carousel from 'svelte-carousel';
 	import type { Settings } from '../api/game';
 	import Board from './board.svelte';
 	import { settings } from './stores';
 	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
 
 	const gradePrecedence = '_BYG';
 	const gradeToClass: { [key: string]: string } = {
@@ -12,19 +12,39 @@
 		B: 'bg-gray-500',
 		_: 'bg-background'
 	};
+	// #6aaa64, #c9b458, #787c7e, #d3d6da
 
 	let guess = '';
 	let guesses: { guess: string; grade: string }[][] = [...Array($settings.boards).keys()].map(
 		() => []
 	);
 
-	let keyboardMap: { [key: string]: string } = 'qwertyuiopasdfghjklzxcvbnm'
-		.split('')
-		.reduce((obj, c) => {
-			return { ...obj, [c]: '_' };
-		}, {});
+	let solved = Array($settings.boards).fill(-1)
 
-	// #6aaa64, #c9b458, #787c7e, #d3d6da
+	const updateKeyboardMap = (
+		guesses: { guess: string; grade: string }[][],
+		currentBoard: number
+	) => {
+		const keyboard: { [key: string]: string } = 'qwertyuiopasdfghjklzxcvbnm'
+			.split('')
+			.reduce((obj, c) => {
+				return { ...obj, [c]: '_' };
+			}, {});
+
+		guesses[currentBoard].forEach((g) => {
+			g.guess.split('').forEach((c, i) => {
+				if (gradePrecedence.indexOf(g.grade[i]) > gradePrecedence.indexOf(keyboard[c])) {
+					keyboard[c] = g.grade[i];
+				}
+			});
+		});
+
+		return keyboard;
+	};
+
+	$: keyboardMap = updateKeyboardMap(guesses, currentBoard);
+
+	// TODO: update keyboard map for currently focused board
 
 	const pushChar = (letter: string) => {
 		guess = guess + letter;
@@ -41,12 +61,7 @@
 
 		if (res.valid) {
 			guesses = guesses.map((g, i) => [...g, { guess, grade: res.grades[i] }]);
-			// TODO: update keyboard map for currently focused board
-			// guess.split('').forEach((c, i) => {
-			// 	if (gradePrecedence.indexOf(res.grade[i]) > gradePrecedence.indexOf(keyboardMap[c])) {
-			// 		keyboardMap[c] = res.grade[i];
-			// 	}
-			// });
+
 			guess = '';
 		} else {
 			guess = guess.slice(0, 4);
@@ -60,32 +75,60 @@
 			?.dispatchEvent(new MouseEvent('click', { cancelable: true }));
 	};
 
-	let carousel;
-	let loaded = [...Array(20).keys()];
+	let viewer: HTMLElement;
+	let boards: HTMLElement[];
+
+	onMount(() => {
+		boards = [...document.getElementsByClassName('board')] as HTMLElement[];
+	});
+
+	let currentBoard = 0;
+	const goTo = (i: number) => {
+		boards[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+	};
+
+	const onViewerScroll = (e: Event) => {
+		for (let i = 0; i < boards.length; i++) {
+			if (boards[i].offsetTop > viewer.scrollTop) {
+				currentBoard = i;
+				return;
+			}
+		}
+		currentBoard = 0;
+	};
 </script>
 
 <svelte:window on:keydown={keydown} />
 
-<div class="w-full flex flex-col items-center justify-center">
+<div class="max-w-2xl flex flex-col items-center justify-center">
 	<h3 class="mb-4 scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">Wordy</h3>
 	<p class="text-2xl font-semibold">
 		A {$settings.sequential ? 'sequential' : 'non-sequential'} game with {$settings.boards} boards, and
 		{$settings.guesses} guesses
 	</p>
-	<div class="w-full my-8 mx-4">
-		{#if browser}
-			<Carousel
-				let:loaded
-				bind:this={carousel}
-				particlesToScroll={1}
-				particlesToShow={3}
-				infinite={false}
-			>
-				{#each guesses as g, i}
-					<Board {guess} guesses={g} index={i} />
-				{/each}
-			</Carousel>
-		{/if}
+	<div class="my-4">
+		<div class="mx-4 flex flex-wrap items-center justify-center">
+			{#each guesses as g, i}
+				<button
+					on:click|preventDefault={() => goTo(i)}
+					class="m-2 w-8 h-8 rounded-full flex items-center justify-center border-2 border-solid {currentBoard ==
+					i
+						? 'border-primary'
+						: 'border-secondary'} {solved[i] >= 0 ? "bg-green-400" : ""}"
+				>
+					<p class="text-foreground">{i + 1}</p>
+				</button>
+			{/each}
+		</div>
+		<div
+			bind:this={viewer}
+			on:scroll={onViewerScroll}
+			class="mt-4 h-[32rem] overflow-y-scroll pretty-scroll space-y-8"
+		>
+			{#each guesses as g, i (i)}
+				<Board {guess} guesses={g} index={i} focused={currentBoard == i} bind:solved={solved[i]} />
+			{/each}
+		</div>
 	</div>
 	<div>
 		<button on:click={popChar} data-key="backspace">{@html '<-'}</button>
@@ -107,3 +150,28 @@
 		{/each}
 	</div>
 </div>
+
+<style>
+	.pretty-scroll::-webkit-scrollbar {
+		width: 0px;
+	}
+
+	.pretty-scroll::-webkit-scrollbar-track {
+		background-color: transparent;
+	}
+
+	.pretty-scroll::-webkit-scrollbar-thumb {
+		background-color: rgb(var(--color-accent));
+		border-radius: 0px;
+		border: 0px solid transparent;
+		background-clip: content-box;
+	}
+
+	.pretty-scroll::-webkit-scrollbar-thumb:hover {
+		background-color: rgb(var(--color-foreground));
+	}
+
+	.pretty-scroll::-webkit-scrollbar-corner {
+		background: transparent;
+	}
+</style>
