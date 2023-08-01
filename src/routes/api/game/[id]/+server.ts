@@ -8,6 +8,8 @@ export const GET = (async ({ params }) => {
   const {id} = params
   const settings = fromId(id)
 
+  console.log("GET id=" + id + " answers=" + getAnswers(id))
+
   return json(settings)
 }) satisfies RequestHandler;
 
@@ -18,7 +20,6 @@ export const PUT = (async ({request, params}) => {
   if(words.indexOf(guess) == -1) return json({valid: false})
 
   const answers = getAnswers(id).map(a => [...a])
-  console.log(answers.map(a => a.join("")))
   
   const grades = answers.map(answer => [...guess].map((c:string, i:number) => {
     if(answer[i] === c) return "G"
