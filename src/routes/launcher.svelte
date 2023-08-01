@@ -1,12 +1,17 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
+	import { getDay } from "@/lib";
 
-	let boards = 0;
-	let guesses = 0;
+	let boards = 1;
+	let guesses = 6;
 	let sequential = false;
+	let day = getDay()
+	let daily = false;
 
 	const play = async () => {
-		const res = await (await fetch("/api/game", {method: "POST", body: JSON.stringify({boards, guesses, sequential})})).json()
+		const res = await (await fetch("/api/game", {method: "POST", body: JSON.stringify({
+			boards, guesses, sequential, day, daily
+		})})).json()
 		goto('/play?' + new URLSearchParams({id: res.id}))
 	}
 

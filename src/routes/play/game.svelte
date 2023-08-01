@@ -57,7 +57,7 @@
 
 	const enter = async () => {
 		const res = await (
-			await fetch('/api/game/' + $settings!.id, { method: 'PUT', body: JSON.stringify({ guess }) })
+			await fetch('/api/game/' + encodeURIComponent($settings!.id), { method: 'PUT', body: JSON.stringify({ guess }) })
 		).json();
 
 		if (res.valid) {

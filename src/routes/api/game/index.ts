@@ -1,27 +1,33 @@
-export type Settings = {boards: number, guesses: number, sequential: number}
+import { HASH_KEY } from "$env/static/private";
+import { getDay } from "@/lib";
+import { AES, enc } from "crypto-js";
 
-const szudzik = (a: number, b:number) => {
-  return a >= b ? (a * a + a + b) : (a + b * b)
+export type Settings = { boards: number, guesses: number, sequential: boolean, seed?: number, day: number }
+
+export const validateSettings = (settings: Settings) => {
+  return settings.boards > 0 && settings.guesses > 0 && settings.sequential != undefined && settings.day <= getDay()
 }
 
-function invSzudzik(z: number) {
-  const sqrtz = Math.floor(Math.sqrt(z)), sqz = sqrtz * sqrtz;
-  return ((z - sqz) >= sqrtz) ? [sqrtz, z - sqz - sqrtz] : [z - sqz, sqrtz];
+export const toId = (settings: Settings) => {
+  const plain = [settings.boards, settings.guesses, settings.sequential, settings.seed, settings.day].join("|")
+  const id = AES.encrypt(plain.toString(), HASH_KEY).toString()
+
+  return id
 }
 
-export const validateSettings = ({boards, guesses, sequential}: Settings) => {
-  return boards > 0 && guesses > 0 && sequential != undefined
+export const getPlain = (id: string) => {
+  return AES.decrypt(id, HASH_KEY).toString(enc.Utf8)
 }
 
-export const toId = ({boards, guesses, sequential}: Settings) => {
-  return (szudzik(boards, guesses) << 1) + (sequential ? 1 : 0)
-}
-
-export const fromId = (id: number) => {
-  const sequential = id % 2 == 1 ? true : false; 
-  const [boards, guesses] = invSzudzik(id >> 1)
+export const fromId = (id: string): Settings => {
+  const plain = getPlain(id)
+  const [boards, guesses, sequential, seed, day] = plain.split("|")
 
   return {
-    boards, guesses, sequential
+    boards: parseInt(boards),
+    guesses: parseInt(guesses),
+    sequential: sequential === "true",
+    day: parseInt(day),
+    seed: parseInt(seed) == 0 ? undefined : parseInt(seed)
   }
 }

@@ -4,8 +4,10 @@ import type { PageServerLoad } from "./$types";
 
 export const load = (async ({ url }) => {
   const id = url.searchParams.get("id")
-  const res = await (await fetch(`${API_URL}/game/${id}`)).json()
-  
+  if(!id) throw new Error("must have id")
+
+  const res = await (await fetch(`${API_URL}/game/${encodeURIComponent(id)}`)).json()
+
   return {
     settings: validateSettings(res) ? {id, ...res} : null
   }

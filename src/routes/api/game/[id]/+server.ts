@@ -6,8 +6,9 @@ import { words } from "../words";
 
 export const GET = (async ({ params }) => {
   const {id} = params
+  const settings = fromId(id)
 
-  return json(fromId(parseInt(id)))
+  return json(settings)
 }) satisfies RequestHandler;
 
 export const PUT = (async ({request, params}) => {
@@ -16,9 +17,9 @@ export const PUT = (async ({request, params}) => {
   const guess = body.guess.toLowerCase();
   if(words.indexOf(guess) == -1) return json({valid: false})
 
-  const answers = getAnswers(parseInt(id)).map(a => [...a])
+  const answers = getAnswers(id).map(a => [...a])
   console.log(answers.map(a => a.join("")))
-  
+
   const grades = answers.map(answer => [...guess].map((c:string, i:number) => {
     if(answer[i] === c) return "G"
     const j = answer.indexOf(c)
