@@ -1,6 +1,7 @@
 import { HASH_KEY } from "$env/static/private";
 import { getDay } from "@/lib";
-import * as CryptoJS from "crypto-js";
+import AES from "crypto-js/aes";
+import utf8 from "crypto-js/enc-utf8"
 
 export type Settings = { boards: number, guesses: number, sequential: boolean, seed?: number, day: number }
 
@@ -16,10 +17,10 @@ export const toId = (settings: Settings) => {
 }
 
 export const encode = (plain: string) => {
-  return CryptoJS.AES.encrypt(plain.toString(), HASH_KEY).toString()
+  return AES.encrypt(plain.toString(), HASH_KEY).toString()
 }
 export const decode = (id: string) => {
-  return CryptoJS.AES.decrypt(id, HASH_KEY).toString(CryptoJS.enc.Utf8)
+  return AES.decrypt(id, HASH_KEY).toString(utf8)
 }
 
 export const fromId = (id: string): Settings => {
