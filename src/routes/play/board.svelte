@@ -4,7 +4,7 @@
 
 	export let guess: string;
 	export let guesses: { guess: string; grade: string }[];
-  export let index: number;
+	export let index: number;
 	export let focused: boolean;
 
 	export let solved = -1;
@@ -24,16 +24,18 @@
 </script>
 
 <div id="board-{index}" class="board min-h-full w-full text-center">
-  <p class="text-xl font-semibold">Board {index+1}</p>
+	<p class="text-xl font-semibold">Board {index + 1}</p>
 	<div
 		class="border-4 p-2 mx-auto my-2 w-fit {solved >= 0
 			? 'border-green-500'
-			: 'border-accent'} {focused ? "border-opacity-100" : "border-opacity-0"} transition-all duration-150 border-solid"
+			: 'border-accent'} {focused
+			? 'border-opacity-100'
+			: 'border-opacity-0'} transition-all duration-150 border-solid"
 	>
 		{#each { length: $settings.guesses } as _, gi}
 			{@const g = guesses[gi]}
 			<div class="max-w-2xl flex">
-				{#if gi < guesses.length}
+				{#if gi < guesses.length && (solved < 0 || gi <= solved)}
 					{#each g.guess as c, i}
 						<div
 							class="block w-16 aspect-square m-1 {gradeToClass[
@@ -43,7 +45,7 @@
 							<p class="text-2xl font-extrabold text-background">{c.toUpperCase()}</p>
 						</div>
 					{/each}
-				{:else if gi == guesses.length}
+				{:else if gi == guesses.length && solved < 0}
 					{#each guess.slice(0, 5).padEnd(5, ' ') as c, i}
 						<div
 							class="block w-16 aspect-square m-1 {gradeToClass[
@@ -59,7 +61,7 @@
 					{#each ''.padEnd(5, ' ') as c, i}
 						<div
 							class="block w-16 aspect-square m-1 {gradeToClass[
-								g ? g.grade[i] : '_'
+								'_'
 							]} flex items-center justify-center border-2 border-solid border-accent"
 						>
 							<p class="text-2xl font-extrabold text-foreground">{c.toUpperCase()}</p>

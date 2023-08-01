@@ -20,6 +20,7 @@
 	);
 
 	let solved = Array($settings.boards).fill(-1)
+	$: win = solved.filter(x => x >= 0).length == $settings.boards;
 
 	const updateKeyboardMap = (
 		guesses: { guess: string; grade: string }[][],
@@ -31,7 +32,7 @@
 				return { ...obj, [c]: '_' };
 			}, {});
 
-		guesses[currentBoard].forEach((g) => {
+		guesses[currentBoard].slice(0, solved[currentBoard] >= 0 ? solved[currentBoard]+1 : undefined).forEach((g) => {
 			g.guess.split('').forEach((c, i) => {
 				if (gradePrecedence.indexOf(g.grade[i]) > gradePrecedence.indexOf(keyboard[c])) {
 					keyboard[c] = g.grade[i];
@@ -101,7 +102,7 @@
 <svelte:window on:keydown={keydown} />
 
 <div class="max-w-2xl flex flex-col items-center justify-center">
-	<h3 class="mb-4 scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">Wordy</h3>
+	<h3 class="mb-4 scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl {win ? "text-green-500 animate-bounce":""}">{win ? "Wordy!!" : "Wordy"}</h3>
 	<p class="text-2xl font-semibold">
 		A {$settings.sequential ? 'sequential' : 'non-sequential'} game with {$settings.boards} boards, and
 		{$settings.guesses} guesses
@@ -114,9 +115,9 @@
 					class="m-2 w-8 h-8 rounded-full flex items-center justify-center border-2 border-solid {currentBoard ==
 					i
 						? 'border-primary'
-						: 'border-secondary'} {solved[i] >= 0 ? "bg-green-400" : ""}"
+						: 'border-secondary'} {solved[i] >= 0 ? "bg-green-500" : ""}"
 				>
-					<p class="text-foreground">{i + 1}</p>
+					<p class="text-foreground font-semibold">{i + 1}</p>
 				</button>
 			{/each}
 		</div>
