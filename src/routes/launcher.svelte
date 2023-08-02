@@ -32,7 +32,7 @@
 		bind:value={daily}
 	>
 		{#each [true, false] as s}
-			<option value={s}>{s ? 'daily' : 'non-daily'}</option>
+			<option value={s}>{s ? 'daily' : 'random'}</option>
 		{/each}
 	</select>
 	<select
