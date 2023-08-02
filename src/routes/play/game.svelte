@@ -4,6 +4,7 @@
 	import { settings } from './stores';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 
 	const gradePrecedence = '_BYG';
 	const gradeToClass: { [key: string]: string } = {
@@ -114,7 +115,11 @@
 				? 'text-green-500 animate-bounce'
 				: ''}"
 		>
-			{win ? 'Wordy!!' : 'Wordy'}
+			Wordy #{$settings.day}{$settings.seed ? "."+$settings.seed : ""} {#if win}
+			<button on:click={() => goto("/")} class="m-1 rounded-full font-extrabold whitespace-pre">
+				{@html '->'}
+			</button>
+			{/if}
 		</h3>
 		<p class="text-2xl font-semibold">
 			A {$settings.sequential ? 'sequential' : 'non-sequential'} game with {$settings.boards} boards,
@@ -179,7 +184,7 @@
 						>{letter.toUpperCase()}</button
 					>
 				{/each}
-				
+
 				{#if r == 2}
 					<button
 						on:click={enter}

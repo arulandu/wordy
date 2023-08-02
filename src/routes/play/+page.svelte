@@ -7,11 +7,6 @@
 	settings.set(data.settings);
 </script>
 
-<svelte:head>
-	<title>Game</title>
-	<meta name="description" content="Svelte demo app" />
-</svelte:head>
-
 <div class="flex flex-col py-8">
 	<div class="flex items-center justify-center flex-grow">
 		{#if data.settings}
