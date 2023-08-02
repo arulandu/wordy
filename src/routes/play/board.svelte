@@ -35,11 +35,12 @@
 	>
 		{#each { length: $settings.guesses } as _, gi}
 			{@const g = guesses[gi]}
+			{@const boxSize = "w-12 xs:w-16 aspect-square m-1"}
 			<div class="max-w-2xl flex">
 				{#if show && gi < guesses.length && (solved < 0 || gi <= solved)}
 					{#each g.guess as c, i}
 						<div
-							class="block w-16 aspect-square m-1 {gradeToClass[
+							class="{boxSize} {gradeToClass[
 								g.grade[i]
 							]} flex items-center justify-center"
 						>
@@ -49,7 +50,7 @@
 				{:else if show && gi == guesses.length && solved < 0}
 					{#each guess.slice(0, 5).padEnd(5, ' ') as c, i}
 						<div
-							class="block w-16 aspect-square m-1 {gradeToClass[
+							class="{boxSize} {gradeToClass[
 								g ? g.grade[i] : '_'
 							]} flex items-center justify-center border-2 border-solid border-accent {c === ' '
 								? ''
@@ -61,7 +62,7 @@
 				{:else}
 					{#each ''.padEnd(5, ' ') as c, i}
 						<div
-							class="block w-16 aspect-square m-1 {gradeToClass[
+							class="{boxSize} {gradeToClass[
 								'_'
 							]} flex items-center justify-center border-2 border-solid border-accent"
 						>

@@ -19,8 +19,8 @@
 		() => []
 	);
 
-	let solved = Array($settings.boards).fill(-1)
-	$: win = solved.filter(x => x >= 0).length == $settings.boards;
+	let solved = Array($settings.boards).fill(-1);
+	$: win = solved.filter((x) => x >= 0).length == $settings.boards;
 	$: closestUnsolvedBoard = solved.indexOf(-1) >= 0 ? solved.indexOf(-1) : solved.length;
 
 	const updateKeyboardMap = (
@@ -33,13 +33,15 @@
 				return { ...obj, [c]: '_' };
 			}, {});
 
-		guesses[currentBoard].slice(0, solved[currentBoard] >= 0 ? solved[currentBoard]+1 : undefined).forEach((g) => {
-			g.guess.split('').forEach((c, i) => {
-				if (gradePrecedence.indexOf(g.grade[i]) > gradePrecedence.indexOf(keyboard[c])) {
-					keyboard[c] = g.grade[i];
-				}
+		guesses[currentBoard]
+			.slice(0, solved[currentBoard] >= 0 ? solved[currentBoard] + 1 : undefined)
+			.forEach((g) => {
+				g.guess.split('').forEach((c, i) => {
+					if (gradePrecedence.indexOf(g.grade[i]) > gradePrecedence.indexOf(keyboard[c])) {
+						keyboard[c] = g.grade[i];
+					}
+				});
 			});
-		});
 
 		return keyboard;
 	};
@@ -58,7 +60,10 @@
 
 	const enter = async () => {
 		const res = await (
-			await fetch('/api/game/' + encodeURIComponent($settings!.id), { method: 'PUT', body: JSON.stringify({ guess }) })
+			await fetch('/api/game/' + encodeURIComponent($settings!.id), {
+				method: 'PUT',
+				body: JSON.stringify({ guess })
+			})
 		).json();
 
 		if (res.valid) {
@@ -103,11 +108,20 @@
 <svelte:window on:keydown={keydown} />
 
 <div class="max-w-2xl flex flex-col items-center justify-center">
-	<h3 class="mb-4 scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl {win ? "text-green-500 animate-bounce":""}">{win ? "Wordy!!" : "Wordy"}</h3>
-	<p class="text-2xl font-semibold">
-		A {$settings.sequential ? 'sequential' : 'non-sequential'} game with {$settings.boards} boards, and
-		{$settings.guesses} guesses
-	</p>
+	<div class="text-center">
+		<h3
+			class="mb-4 scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl {win
+				? 'text-green-500 animate-bounce'
+				: ''}"
+		>
+			{win ? 'Wordy!!' : 'Wordy'}
+		</h3>
+		<p class="text-2xl font-semibold">
+			A {$settings.sequential ? 'sequential' : 'non-sequential'} game with {$settings.boards} boards,
+			and
+			{$settings.guesses} guesses
+		</p>
+	</div>
 	<div class="my-4">
 		<div class="mx-4 flex flex-wrap items-center justify-center">
 			{#each guesses as g, i}
@@ -116,7 +130,10 @@
 					class="m-2 w-8 h-8 rounded-full flex items-center justify-center border-2 border-solid {currentBoard ==
 					i
 						? 'border-primary'
-						: 'border-secondary'} {solved[i] >= 0 && (!$settings.sequential || i <= closestUnsolvedBoard) ? "bg-green-500" : ""}"
+						: 'border-secondary'} {solved[i] >= 0 &&
+					(!$settings.sequential || i <= closestUnsolvedBoard)
+						? 'bg-green-500'
+						: ''}"
 				>
 					<p class="text-foreground font-semibold">{i + 1}</p>
 				</button>
@@ -125,29 +142,52 @@
 		<div
 			bind:this={viewer}
 			on:scroll={onViewerScroll}
-			class="mt-4 h-[32rem] overflow-y-scroll pretty-scroll space-y-8"
+			class="mt-4 mx-auto h-[32rem] w-fit overflow-y-scroll pretty-scroll space-y-8"
 		>
 			{#each guesses as g, i (i)}
-				<Board {guess} guesses={g} index={i} show={!$settings.sequential || i <= closestUnsolvedBoard} focused={currentBoard == i} bind:solved={solved[i]} />
+				<Board
+					{guess}
+					guesses={g}
+					index={i}
+					show={!$settings.sequential || i <= closestUnsolvedBoard}
+					focused={currentBoard == i}
+					bind:solved={solved[i]}
+				/>
 			{/each}
 		</div>
 	</div>
 	<div>
-		<button on:click={popChar} data-key="backspace">{@html '<-'}</button>
-		<button on:click={enter} data-key="enter">{@html '->'}</button>
-		{#each ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'] as row}
+		{#each ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'] as row, r}
 			<div class="flex items-center justify-center">
+				{#if r == 2}
+					<button
+						on:click={popChar}
+						data-key="backspace"
+						class="m-1 p-1 xs:p-3 bg-secondary text-foreground border-opacity-0 hover:border-opacity-25 border border-primary border-solid rounded-md font-semibold text-xl"
+						>Back</button
+					>
+				{/if}
+
 				{#each row as letter}
 					<button
 						on:click={() => pushChar(letter)}
 						data-key={letter}
-						class="m-1 p-3 {keyboardMap[letter] == '_'
+						class="m-1 p-1 xs:p-3 {keyboardMap[letter] == '_'
 							? 'bg-secondary text-foreground'
 							: gradeToClass[keyboardMap[letter]] +
 							  ' text-background'} border-opacity-0 hover:border-opacity-25 border border-primary border-solid rounded-md font-bold text-xl"
 						>{letter.toUpperCase()}</button
 					>
 				{/each}
+				
+				{#if r == 2}
+					<button
+						on:click={enter}
+						data-key="enter"
+						class="m-1 p-1 xs:p-3 bg-secondary text-foreground border-opacity-0 hover:border-opacity-25 border border-primary border-solid rounded-md font-semibold text-xl"
+						>Enter</button
+					>
+				{/if}
 			</div>
 		{/each}
 	</div>
