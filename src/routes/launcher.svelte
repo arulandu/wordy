@@ -2,30 +2,47 @@
 	import { goto } from '$app/navigation';
 	import { getDay } from '@/lib';
 
-	let boards = 1;
-	let guesses = 6;
-	let sequential = false;
-	let day = getDay();
-	let daily = true;
+	let boards = 1, guesses = 6, sequential = false, day = getDay(), daily = true;
+
+	const presets = [
+		{ name: 'wordle', boards: 1, guesses: 6},
+		{ name: 'quordle', boards: 4, guesses: 9},
+		{ name: 'octordle', boards: 8, guesses: 13 },
+		{ name: 'sedecordle', boards: 16, guesses: 21},
+	];
+	let presetInd = 0
+	const applyPreset = (i: number) => {
+		boards = presets[i].boards ?? boards;
+		guesses = presets[i].guesses ?? guesses;
+	}
+	$: { applyPreset(presetInd) }
 
 	const play = async () => {
 		const res = await (
 			await fetch('/api/game', {
 				method: 'POST',
-				body: JSON.stringify({
-					boards,
-					guesses,
-					sequential,
-					day,
-					daily
-				})
+				body: JSON.stringify({boards, guesses, sequential, day, daily})
 			})
 		).json();
 		goto('/play?' + new URLSearchParams({ id: res.id }));
 	};
 </script>
 
-<div class="mx-auto mt-2 w-fit flex flex-col sm:flex-row items-center justify-center border border-primary border-solid p-2 rounded-md bg-accent bg-opacity-5">
+<div class="mb-2 text-xl flex items-center justify-center">
+	<p>Ever wanted to play </p>
+	<select
+		class="mx-2 block bg-background border-solid border-2 border-primary rounded-md p-1"
+		bind:value={presetInd}
+	>
+		{#each presets as p,i}
+			<option value={i}>{p.name}</option>
+		{/each}
+	</select>
+	 <p>but a bit different? Join the club.</p>
+</div>
+<div
+	class="mx-auto mt-2 w-fit flex flex-col sm:flex-row items-center justify-center border border-primary border-solid p-2 rounded-md bg-accent bg-opacity-5"
+>
 	<p>Play {daily ? 'the' : 'a'}</p>
 	<select
 		class="m-1 block bg-background border-solid border-2 border-primary rounded-md p-1"

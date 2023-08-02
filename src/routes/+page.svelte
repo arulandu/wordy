@@ -6,7 +6,6 @@
 	<div class="flex items-center justify-center flex-grow">
 		<div class="text-center">
 			<h1 class="mb-6 scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">wordy.<span class="text-accent">club</span></h1>
-			<p class="mb-2 text-xl">Ever wanted to play every wordle-variant at once? Join the club.</p>
 			<Launcher/>
 		</div>
 	</div>
