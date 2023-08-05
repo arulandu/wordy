@@ -1,13 +1,11 @@
 <script lang="ts">
-	import { theme } from './stores';
+	import { theme, Theme } from './stores';
 
-	let toggled = false;
-	$: {
-		$theme = toggled ? 'dark' : '';
-	}
+	let toggled = $theme == Theme.DARK;
 
 	const toggle = () => {
 		toggled = !toggled;
+		$theme = toggled ? Theme.DARK : Theme.LIGHT;
 	};
 </script>
 
@@ -17,7 +15,7 @@
 	<button class="w-14 h-7 flex items-center bg-accent rounded-full" on:click={toggle}>
 		<!-- Switch -->
 		<div
-			class="bg-white w-7 h-7 p-1 text-accent flex items-center justify-center rounded-full shadow-md transform {toggled
+			class="bg-background w-8 h-8 p-1 text-accent flex items-center justify-center rounded-full shadow-md transform {toggled
 				? 'translate-x-7'
 				: ''} transition-all"
 		>

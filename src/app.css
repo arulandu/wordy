@@ -11,7 +11,7 @@
     --color-background: 240 240 240;
     --color-primary: 51 52 50;
     --color-secondary: 229 230 229;
-    --color-accent: 129 129 126;
+    --color-accent: 129 159 126;
   }
 
   .dark {
@@ -19,7 +19,7 @@
     --color-background: 25 25 26;
     --color-primary: 51 52 50;
     --color-secondary: 25 26 25;
-    --color-accent: 205 205 203;
+    --color-accent: 205 235 203;
   }
 }
 
