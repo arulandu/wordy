@@ -65,7 +65,7 @@
 	// TODO: update keyboard map for currently focused board
 
 	const pushChar = (letter: string) => {
-		guess = guess + letter;
+		if(guess.length < 5) guess += letter;
 	};
 
 	const popChar = () => {
@@ -125,7 +125,7 @@
 	{#if result != 0}
 		<div
 			class="absolute w-full h-full inset-0 z-50 bg-background bg-opacity-80 backdrop-blur-sm"
-			transition:fade
+			transition:fade={{delay: 500}}
 		>
 			<div
 				class="mx-auto p-6 max-w-lg bg-background border border-accent rounded-md border-solid shadow-lg text-center"
@@ -135,7 +135,7 @@
 				</h1>
 				<button
 					on:click={() => goto('/')}
-					class="mt-4 rounded-lg font-extrabold whitespace-pre p-2 bg-foreground text-secondary"
+					class="mt-4 rounded-lg font-extrabold whitespace-pre p-2 bg-accent text-background text-lg"
 				>
 					Continue
 				</button>
