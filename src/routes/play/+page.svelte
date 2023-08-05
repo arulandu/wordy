@@ -8,7 +8,7 @@ import type { PageServerData } from './$types';
 	settings.set(data.settings);
 </script>
 
-<div class="relative flex flex-col py-8">
+<div class="relative flex flex-col py-4">
 	<Theme/>
 	<div class="flex items-center justify-center flex-grow">
 		{#if data.settings}

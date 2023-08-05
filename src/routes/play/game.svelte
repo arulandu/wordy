@@ -20,7 +20,14 @@
 	let guesses: { guess: string; grade: string }[][] = [...Array($settings.boards).keys()].map(
 		() => []
 	);
+	let invalid = false;
 
+	// TODO: svelte is high. how do i trigger an animation from event??
+	const alertInvalid = () => {
+		invalid = true;
+		setTimeout(() => { console.log("clear"); invalid = false; }, 600)
+	}
+	
 	let solved = Array($settings.boards).fill(-1);
 	$: result =
 		solved.filter((x) => x >= 0).length == $settings.boards
@@ -78,7 +85,7 @@
 
 			guess = '';
 		} else {
-			guess = guess.slice(0, 4);
+			alertInvalid()
 		}
 	};
 
@@ -98,12 +105,12 @@
 
 	let currentBoard = 0;
 	const goTo = (i: number) => {
-		viewer.scroll({top: boards[i].offsetTop, behavior: "smooth"})
+		viewer.scroll({ top: boards[i].offsetTop, behavior: 'smooth' });
 	};
 
 	const onViewerScroll = (e: Event) => {
 		for (let i = 0; i < boards.length; i++) {
-			if ((boards[i].offsetTop +boards[i].offsetHeight)> viewer.scrollTop) {
+			if (boards[i].offsetTop + boards[i].offsetHeight > viewer.scrollTop) {
 				currentBoard = i;
 				return;
 			}
@@ -136,20 +143,20 @@
 		</div>
 	{/if}
 	<div class="text-center">
-		<h3 class="mb-4 scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">
+		<h3 class="mb-4 scroll-m-20 text-3xl font-bold tracking-tight">
 			Wordy #{$settings.day}{$settings.seed ? '.' + $settings.seed : ''}
 		</h3>
-		<p class="text-2xl font-semibold">
+		<!-- <p class="text-2xl font-semibold">
 			A {$settings.sequential ? 'sequential' : 'non-sequential'} game with {$settings.boards} boards,
 			and
 			{$settings.guesses} guesses
-		</p>
+		</p> -->
 	</div>
 	<div class="mx-4 flex flex-wrap items-center justify-center">
 		{#each guesses as g, i}
 			<button
 				on:click|preventDefault={() => goTo(i)}
-				class="m-2 w-8 h-8 rounded-full flex items-center justify-center border-2 border-solid {currentBoard ==
+				class="m-1 w-8 h-8 rounded-full flex items-center justify-center border-2 border-solid {currentBoard ==
 				i
 					? 'border-primary'
 					: 'border-secondary'} {solved[i] >= 0 &&
@@ -161,30 +168,35 @@
 			</button>
 		{/each}
 	</div>
-	<div
-		bind:this={viewer}
-		on:scroll={onViewerScroll}
-		class="relative mt-4 mx-auto h-[32rem] w-fit overflow-y-scroll pretty-scroll space-y-8 transition-all"
-	>
-		{#each guesses as g, i (i)}
-			<Board
-				{guess}
-				guesses={g}
-				index={i}
-				show={!$settings.sequential || i <= closestUnsolvedBoard}
-				focused={currentBoard == i}
-				bind:solved={solved[i]}
-			/>
-		{/each}
+	<div class="mt-4 bg-secondary p-4 rounded-lg shadow-sm">
+		<div
+			bind:this={viewer}
+			on:scroll={onViewerScroll}
+			class="relative mx-auto h-[32rem] w-fit overflow-y-scroll pretty-scroll space-y-8 transition-all"
+		>
+			{#each guesses as g, i (i)}
+				<Board
+					{guess}
+					guesses={g}
+					index={i}
+					show={!$settings.sequential || i <= closestUnsolvedBoard}
+					focused={currentBoard == i}
+					invalid={invalid}
+					bind:solved={solved[i]}
+				/>
+			{/each}
+		</div>
 	</div>
-	<div>
+	<div class="mt-2">
 		{#each ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'] as row, r}
+			{@const keyStyle =
+				'm-1 p-1 xs:p-3 border-opacity-0 hover:border-opacity-25 border border-primary border-solid rounded-md font-bold text-xl'}
 			<div class="flex items-center justify-center">
 				{#if r == 2}
 					<button
 						on:click={popChar}
 						data-key="backspace"
-						class="m-1 p-1 xs:p-3 bg-secondary text-foreground border-opacity-0 hover:border-opacity-25 border border-primary border-solid rounded-md font-semibold text-xl"
+						class="bg-secondary text-foreground {keyStyle}"
 						>Back</button
 					>
 				{/if}
@@ -193,10 +205,9 @@
 					<button
 						on:click={() => pushChar(letter)}
 						data-key={letter}
-						class="m-1 p-1 xs:p-3 {keyboardMap[letter] == '_'
+						class="{keyboardMap[letter] == '_'
 							? 'bg-secondary text-foreground'
-							: gradeToClass[keyboardMap[letter]] +
-							  ' text-background'} border-opacity-0 hover:border-opacity-25 border border-primary border-solid rounded-md font-bold text-xl"
+							: gradeToClass[keyboardMap[letter]] + ' text-background'} {keyStyle}"
 						>{letter.toUpperCase()}</button
 					>
 				{/each}
@@ -205,7 +216,7 @@
 					<button
 						on:click={enter}
 						data-key="enter"
-						class="m-1 p-1 xs:p-3 bg-secondary text-foreground border-opacity-0 hover:border-opacity-25 border border-primary border-solid rounded-md font-semibold text-xl"
+						class="bg-secondary text-foreground {keyStyle}"
 						>Enter</button
 					>
 				{/if}

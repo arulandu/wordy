@@ -7,6 +7,7 @@
 	export let index: number;
 	export let focused: boolean;
 	export let show = true;
+	export let invalid = false;
 
 	export let solved = -1;
 	$: {
@@ -20,7 +21,7 @@
 		G: 'bg-green-500',
 		Y: 'bg-yellow-500',
 		B: 'bg-gray-500',
-		_: 'bg-background'
+		_: 'bg-secondary'
 	};
 </script>
 
@@ -31,41 +32,36 @@
 			? 'border-green-500'
 			: 'border-foreground'} {focused
 			? 'border-opacity-100'
-			: 'border-opacity-0'} transition-all duration-150 border-solid"
+			: 'border-opacity-0'} transition-all duration-150 border-solid rounded-sm"
 	>
 		{#each { length: $settings.guesses } as _, gi}
 			{@const g = guesses[gi]}
-			{@const boxSize = "w-12 xs:w-16 aspect-square m-1"}
+			{@const boxStyle = `w-12 xs:w-16 aspect-square m-1 rounded-sm flex items-center justify-center`}
 			<div class="max-w-2xl flex">
 				{#if show && gi < guesses.length && (solved < 0 || gi <= solved)}
 					{#each g.guess as c, i}
-						<div
-							class="{boxSize} {gradeToClass[
-								g.grade[i]
-							]} flex items-center justify-center"
-						>
+						<div class="{boxStyle} {gradeToClass[g.grade[i]]} animate-[flip_300ms_ease-out_1]">
 							<p class="text-2xl font-extrabold text-background">{c.toUpperCase()}</p>
 						</div>
 					{/each}
 				{:else if show && gi == guesses.length && solved < 0}
 					{#each guess.slice(0, 5).padEnd(5, ' ') as c, i}
-						<div
-							class="{boxSize} {gradeToClass[
-								g ? g.grade[i] : '_'
-							]} flex items-center justify-center border-2 border-solid {c === ' '
-								? 'border-foreground'
-								: 'border-foreground'}"
-						>
-							<p class="text-2xl font-extrabold text-foreground">{c.toUpperCase()}</p>
+						<div class={invalid ? 'animate-[shake_600ms_ease-in-out_1]' : ''}>
+							<div
+								class="
+							{boxStyle} 
+							{gradeToClass[g ? g.grade[i] : '_']} 
+							 border-2 border-solid
+							{c === ' ' ? 'border-foreground' : 'border-foreground'} 
+							{c === ' ' ? '' : 'animate-[pop_150ms_ease-out_1]'}"
+							>
+								<p class="text-2xl font-extrabold text-foreground">{c.toUpperCase()}</p>
+							</div>
 						</div>
 					{/each}
 				{:else}
 					{#each ''.padEnd(5, ' ') as c, i}
-						<div
-							class="{boxSize} {gradeToClass[
-								'_'
-							]} flex items-center justify-center border-2 border-solid border-foreground"
-						>
+						<div class="{boxStyle} {gradeToClass['_']} border-2 border-solid border-foreground">
 							<p class="text-2xl font-extrabold text-foreground">{c.toUpperCase()}</p>
 						</div>
 					{/each}
