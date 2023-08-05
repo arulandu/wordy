@@ -29,7 +29,7 @@
 	<div
 		class="border-4 p-2 mx-auto my-2 w-fit {solved >= 0
 			? 'border-green-500'
-			: 'border-accent'} {focused
+			: 'border-foreground'} {focused
 			? 'border-opacity-100'
 			: 'border-opacity-0'} transition-all duration-150 border-solid"
 	>
@@ -52,8 +52,8 @@
 						<div
 							class="{boxSize} {gradeToClass[
 								g ? g.grade[i] : '_'
-							]} flex items-center justify-center border-2 border-solid border-accent {c === ' '
-								? ''
+							]} flex items-center justify-center border-2 border-solid {c === ' '
+								? 'border-foreground'
 								: 'border-foreground'}"
 						>
 							<p class="text-2xl font-extrabold text-foreground">{c.toUpperCase()}</p>
@@ -64,7 +64,7 @@
 						<div
 							class="{boxSize} {gradeToClass[
 								'_'
-							]} flex items-center justify-center border-2 border-solid border-accent"
+							]} flex items-center justify-center border-2 border-solid border-foreground"
 						>
 							<p class="text-2xl font-extrabold text-foreground">{c.toUpperCase()}</p>
 						</div>

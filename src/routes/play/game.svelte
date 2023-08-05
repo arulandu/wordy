@@ -116,21 +116,25 @@
 
 <div class="relative max-w-2xl flex flex-col items-center justify-center">
 	{#if result != 0}
-	<div
-		class="absolute w-full h-full inset-0 z-50 bg-background bg-opacity-80 backdrop-blur-sm"
-		transition:fade
-	>
-		<div class="mx-auto p-6 max-w-lg bg-background border border-accent rounded-md border-solid shadow-lg text-center">
-			<h1 class="text-2xl font-semibold">{result == 1 ? "Congratulations!" : "Better luck next time!"}</h1>
-			<button
-				on:click={() => goto('/')}
-				class="mt-4 rounded-lg font-extrabold whitespace-pre p-2 bg-foreground text-secondary"
+		<div
+			class="absolute w-full h-full inset-0 z-50 bg-background bg-opacity-80 backdrop-blur-sm"
+			transition:fade
+		>
+			<div
+				class="mx-auto p-6 max-w-lg bg-background border border-accent rounded-md border-solid shadow-lg text-center"
 			>
-				Continue
-			</button>
+				<h1 class="text-2xl font-semibold">
+					{result == 1 ? 'Congratulations!' : 'Better luck next time!'}
+				</h1>
+				<button
+					on:click={() => goto('/')}
+					class="mt-4 rounded-lg font-extrabold whitespace-pre p-2 bg-foreground text-secondary"
+				>
+					Continue
+				</button>
+			</div>
 		</div>
-	</div>
-{/if}
+	{/if}
 	<div class="text-center">
 		<h3 class="mb-4 scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">
 			Wordy #{$settings.day}{$settings.seed ? '.' + $settings.seed : ''}
@@ -141,39 +145,37 @@
 			{$settings.guesses} guesses
 		</p>
 	</div>
-	<div class="my-4">
-		<div class="mx-4 flex flex-wrap items-center justify-center">
-			{#each guesses as g, i}
-				<button
-					on:click|preventDefault={() => goTo(i)}
-					class="m-2 w-8 h-8 rounded-full flex items-center justify-center border-2 border-solid {currentBoard ==
-					i
-						? 'border-primary'
-						: 'border-secondary'} {solved[i] >= 0 &&
-					(!$settings.sequential || i <= closestUnsolvedBoard)
-						? 'bg-green-500'
-						: ''}"
-				>
-					<p class="text-foreground font-semibold">{i + 1}</p>
-				</button>
-			{/each}
-		</div>
-		<div
-			bind:this={viewer}
-			on:scroll={onViewerScroll}
-			class="relative mt-4 mx-auto h-[32rem] w-fit overflow-y-scroll pretty-scroll space-y-8"
-		>
-			{#each guesses as g, i (i)}
-				<Board
-					{guess}
-					guesses={g}
-					index={i}
-					show={!$settings.sequential || i <= closestUnsolvedBoard}
-					focused={currentBoard == i}
-					bind:solved={solved[i]}
-				/>
-			{/each}
-		</div>
+	<div class="mx-4 flex flex-wrap items-center justify-center">
+		{#each guesses as g, i}
+			<button
+				on:click|preventDefault={() => goTo(i)}
+				class="m-2 w-8 h-8 rounded-full flex items-center justify-center border-2 border-solid {currentBoard ==
+				i
+					? 'border-primary'
+					: 'border-secondary'} {solved[i] >= 0 &&
+				(!$settings.sequential || i <= closestUnsolvedBoard)
+					? 'bg-green-500'
+					: ''}"
+			>
+				<p class="text-foreground font-semibold">{i + 1}</p>
+			</button>
+		{/each}
+	</div>
+	<div
+		bind:this={viewer}
+		on:scroll={onViewerScroll}
+		class="relative mt-4 mx-auto h-[32rem] w-fit overflow-y-scroll pretty-scroll space-y-8"
+	>
+		{#each guesses as g, i (i)}
+			<Board
+				{guess}
+				guesses={g}
+				index={i}
+				show={!$settings.sequential || i <= closestUnsolvedBoard}
+				focused={currentBoard == i}
+				bind:solved={solved[i]}
+			/>
+		{/each}
 	</div>
 	<div>
 		{#each ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'] as row, r}
