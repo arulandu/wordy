@@ -1,4 +1,6 @@
-import { readable } from "svelte/store";
+import { readable, writable } from "svelte/store";
+
+export const theme = writable("");
 
 export const time = readable<Date>(new Date(), function start(set) {
 	const interval = setInterval(() => {

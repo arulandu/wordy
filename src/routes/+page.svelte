@@ -1,12 +1,16 @@
 <script lang="ts">
-	import Launcher from "./launcher.svelte";
+	import Launcher from './launcher.svelte';
+	import Theme from './theme.svelte';
 </script>
 
-<div class="h-screen flex flex-col">
+<div class="relative h-screen flex flex-col">
+	<Theme/>
 	<div class="flex items-center justify-center flex-grow">
 		<div class="text-center">
-			<h1 class="mb-6 scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">wordy.<span class="text-accent">club</span></h1>
-			<Launcher/>
+			<h1 class="mb-6 scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">
+				wordy.<span class="text-accent">club</span>
+			</h1>
+			<Launcher />
 		</div>
 	</div>
 	<footer class="mb-8 flex flex-col items-center justify-center w-full">

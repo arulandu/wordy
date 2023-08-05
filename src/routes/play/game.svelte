@@ -5,6 +5,7 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { fade } from 'svelte/transition';
 
 	const gradePrecedence = '_BYG';
 	const gradeToClass: { [key: string]: string } = {
@@ -21,7 +22,12 @@
 	);
 
 	let solved = Array($settings.boards).fill(-1);
-	$: win = solved.filter((x) => x >= 0).length == $settings.boards;
+	$: result =
+		solved.filter((x) => x >= 0).length == $settings.boards
+			? 1
+			: guesses[0].length >= $settings.guesses
+			? -1
+			: 0;
 	$: closestUnsolvedBoard = solved.indexOf(-1) >= 0 ? solved.indexOf(-1) : solved.length;
 
 	const updateKeyboardMap = (
@@ -108,18 +114,26 @@
 
 <svelte:window on:keydown={keydown} />
 
-<div class="max-w-2xl flex flex-col items-center justify-center">
-	<div class="text-center">
-		<h3
-			class="mb-4 scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl {win
-				? 'text-green-500 animate-bounce'
-				: ''}"
-		>
-			Wordy #{$settings.day}{$settings.seed ? "."+$settings.seed : ""} {#if win}
-			<button on:click={() => goto("/")} class="m-1 rounded-full font-extrabold whitespace-pre">
-				{@html '->'}
+<div class="relative max-w-2xl flex flex-col items-center justify-center">
+	{#if result != 0}
+	<div
+		class="absolute w-full h-full inset-0 z-50 bg-background bg-opacity-80 backdrop-blur-sm"
+		transition:fade
+	>
+		<div class="mx-auto p-6 max-w-lg bg-background border border-accent rounded-md border-solid shadow-lg text-center">
+			<h1 class="text-2xl font-semibold">{result == 1 ? "Congratulations!" : "Better luck next time!"}</h1>
+			<button
+				on:click={() => goto('/')}
+				class="mt-4 rounded-lg font-extrabold whitespace-pre p-2 bg-foreground text-secondary"
+			>
+				Continue
 			</button>
-			{/if}
+		</div>
+	</div>
+{/if}
+	<div class="text-center">
+		<h3 class="mb-4 scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">
+			Wordy #{$settings.day}{$settings.seed ? '.' + $settings.seed : ''}
 		</h3>
 		<p class="text-2xl font-semibold">
 			A {$settings.sequential ? 'sequential' : 'non-sequential'} game with {$settings.boards} boards,
@@ -147,7 +161,7 @@
 		<div
 			bind:this={viewer}
 			on:scroll={onViewerScroll}
-			class="mt-4 mx-auto h-[32rem] w-fit overflow-y-scroll pretty-scroll space-y-8"
+			class="relative mt-4 mx-auto h-[32rem] w-fit overflow-y-scroll pretty-scroll space-y-8"
 		>
 			{#each guesses as g, i (i)}
 				<Board

@@ -6,11 +6,20 @@
 
 @layer base {
   :root {
-    --color-background: 240 240 240;
     --color-foreground: 25 25 26;
+
+    --color-background: 240 240 240;
     --color-primary: 51 52 50;
     --color-secondary: 229 230 229;
     --color-accent: 129 129 126;
+  }
+
+  .dark {
+    --color-foreground: 240 240 240;
+    --color-background: 25 25 26;
+    --color-primary: 51 52 50;
+    --color-secondary: 25 26 25;
+    --color-accent: 205 205 203;
   }
 }
 
