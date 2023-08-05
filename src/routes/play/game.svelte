@@ -98,17 +98,17 @@
 
 	let currentBoard = 0;
 	const goTo = (i: number) => {
-		boards[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+		viewer.scroll({top: boards[i].offsetTop, behavior: "smooth"})
 	};
 
 	const onViewerScroll = (e: Event) => {
 		for (let i = 0; i < boards.length; i++) {
-			if (boards[i].offsetTop > viewer.scrollTop) {
+			if ((boards[i].offsetTop +boards[i].offsetHeight)> viewer.scrollTop) {
 				currentBoard = i;
 				return;
 			}
 		}
-		currentBoard = 0;
+		// currentBoard = 0;
 	};
 </script>
 
@@ -164,7 +164,7 @@
 	<div
 		bind:this={viewer}
 		on:scroll={onViewerScroll}
-		class="relative mt-4 mx-auto h-[32rem] w-fit overflow-y-scroll pretty-scroll space-y-8"
+		class="relative mt-4 mx-auto h-[32rem] w-fit overflow-y-scroll pretty-scroll space-y-8 transition-all"
 	>
 		{#each guesses as g, i (i)}
 			<Board
