@@ -17,7 +17,6 @@ export const theme = writable(Theme.LIGHT, (set) => {
 
 theme.subscribe((v) => {
   if(browser) {
-    console.log('sub', v)
     window.localStorage.setItem('theme', v)
   }
 })

@@ -10,7 +10,7 @@
 		daily = true;
 	$: timeToDaily = getNextDayDate().valueOf() - $time.valueOf();
 	$: hoursToDaily = Math.floor((timeToDaily / (1000 * 60 * 60)) % 24);
-	$: minsToDaily = Math.floor(timeToDaily / (1000 * 60) / 60);
+	$: minsToDaily = Math.floor((timeToDaily / (1000 * 60)) % 60);
 	$: secondsToDaily = Math.floor((timeToDaily / 1000) % 60);
 	const format = (x: number) => {
 		return x < 10 ? '0' + x : x;
