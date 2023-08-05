@@ -22,9 +22,14 @@ export const PUT = (async ({request, params}) => {
   const answers = getAnswers(id).map(a => [...a])
   
   const grades = answers.map(answer => [...guess].map((c:string, i:number) => {
-    if(answer[i] === c) return "G"
+    if(answer[i] == c) {
+      answer[i] = "_"
+      return "G"
+    }
+
     const j = answer.indexOf(c)
     if(j == -1) return "B"
+
     answer[j] = "_"
     return "Y"
   }).join(""))
