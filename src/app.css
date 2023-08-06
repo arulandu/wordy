@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --color-hue: 330; /*201, 110, 310, 264, 350*/
+    --color-hue: 264; /*201, 110, 310, 264, 350*/
 
     --color-foreground: var(--color-hue), 87%, 9%;
     --color-background: var(--color-hue), 87%, 97%;
