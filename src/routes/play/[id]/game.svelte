@@ -1,11 +1,13 @@
 <script lang="ts">
-	import type { Settings } from '../api/game';
+	import type { Settings } from '@/routes/api/game';
 	import Board from './board.svelte';
-	import { settings } from './stores';
+	import { game } from './stores';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { fade } from 'svelte/transition';
+	import { player } from "@/routes/stores";
+	import { page } from '$app/stores';
 
 	const gradePrecedence = '_BYG';
 	const gradeToClass: { [key: string]: string } = {
@@ -17,22 +19,19 @@
 	// #6aaa64, #c9b458, #787c7e, #d3d6da
 
 	let guess = '';
-	let guesses: { guess: string; grade: string }[][] = [...Array($settings.boards).keys()].map(
-		() => []
-	);
 	let invalid = false;
 
 	// TODO: svelte is high. how do i trigger an animation from event??
 	const alertInvalid = () => {
 		invalid = true;
-		setTimeout(() => { console.log("clear"); invalid = false; }, 600)
+		setTimeout(() => { invalid = false; }, 600)
 	}
 	
-	let solved = Array($settings.boards).fill(-1);
+	let solved = Array($game.settings.boards).fill(-1);
 	$: result =
-		solved.filter((x) => x >= 0).length == $settings.boards
+		solved.filter((x) => x >= 0).length == $game.settings.boards
 			? 1
-			: guesses[0].length >= $settings.guesses
+			: $game.guesses[0].length >= $game.settings.guesses
 			? -1
 			: 0;
 	$: closestUnsolvedBoard = solved.indexOf(-1) >= 0 ? solved.indexOf(-1) : solved.length;
@@ -60,7 +59,7 @@
 		return keyboard;
 	};
 
-	$: keyboardMap = updateKeyboardMap(guesses, currentBoard);
+	$: keyboardMap = updateKeyboardMap($game.guesses, currentBoard);
 
 	// TODO: update keyboard map for currently focused board
 
@@ -74,14 +73,14 @@
 
 	const enter = async () => {
 		const res = await (
-			await fetch('/api/game/' + encodeURIComponent($settings!.id), {
+			await fetch('/api/game/' + encodeURIComponent($game.settings!.id), {
 				method: 'PUT',
 				body: JSON.stringify({ guess })
 			})
 		).json();
 
 		if (res.valid) {
-			guesses = guesses.map((g, i) => [...g, { guess, grade: res.grades[i] }]);
+			$game.guesses = $game.guesses.map((g, i) => [...g, { guess, grade: res.grades[i] }]);
 
 			guess = '';
 		} else {
@@ -115,7 +114,6 @@
 				return;
 			}
 		}
-		// currentBoard = 0;
 	};
 </script>
 
@@ -125,7 +123,7 @@
 	{#if result != 0}
 		<div
 			class="absolute w-full h-full inset-0 z-50 bg-background bg-opacity-80 backdrop-blur-sm"
-			transition:fade={{delay: 500}}
+			transition:fade={{ delay: 500 }}
 		>
 			<div
 				class="mx-auto p-6 max-w-lg bg-background border border-accent rounded-md border-solid shadow-lg text-center"
@@ -144,23 +142,18 @@
 	{/if}
 	<div class="text-center">
 		<h3 class="mb-4 scroll-m-20 text-3xl font-bold tracking-tight">
-			Wordy #{$settings.day}{$settings.seed ? '.' + $settings.seed : ''}
+			Wordy #{$game.settings.day}{$game.settings.seed ? '.' + $game.settings.seed : ''}
 		</h3>
-		<!-- <p class="text-2xl font-semibold">
-			A {$settings.sequential ? 'sequential' : 'non-sequential'} game with {$settings.boards} boards,
-			and
-			{$settings.guesses} guesses
-		</p> -->
 	</div>
 	<div class="mx-4 flex flex-wrap items-center justify-center">
-		{#each guesses as g, i}
+		{#each $game.guesses as g, i}
 			<button
 				on:click|preventDefault={() => goTo(i)}
 				class="m-1 w-8 h-8 rounded-full flex items-center justify-center border-2 border-solid {currentBoard ==
 				i
 					? 'border-primary'
 					: 'border-secondary'} {solved[i] >= 0 &&
-				(!$settings.sequential || i <= closestUnsolvedBoard)
+				(!$game.settings.sequential || i <= closestUnsolvedBoard)
 					? 'bg-green-500'
 					: ''}"
 			>
@@ -174,14 +167,14 @@
 			on:scroll={onViewerScroll}
 			class="relative mx-auto h-[32rem] w-fit overflow-y-scroll pretty-scroll space-y-8 transition-all"
 		>
-			{#each guesses as g, i (i)}
+			{#each $game.guesses as g, i (i)}
 				<Board
 					{guess}
 					guesses={g}
 					index={i}
-					show={!$settings.sequential || i <= closestUnsolvedBoard}
+					show={!$game.settings.sequential || i <= closestUnsolvedBoard}
 					focused={currentBoard == i}
-					invalid={invalid}
+					{invalid}
 					bind:solved={solved[i]}
 				/>
 			{/each}
@@ -196,8 +189,7 @@
 					<button
 						on:click={popChar}
 						data-key="backspace"
-						class="bg-secondary text-foreground {keyStyle}"
-						>Back</button
+						class="bg-secondary text-foreground {keyStyle}">Back</button
 					>
 				{/if}
 
@@ -213,10 +205,7 @@
 				{/each}
 
 				{#if r == 2}
-					<button
-						on:click={enter}
-						data-key="enter"
-						class="bg-secondary text-foreground {keyStyle}"
+					<button on:click={enter} data-key="enter" class="bg-secondary text-foreground {keyStyle}"
 						>Enter</button
 					>
 				{/if}

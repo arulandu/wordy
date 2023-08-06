@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import { settings } from './stores';
+	import { game } from './stores';
 
 	export let guess: string;
 	export let guesses: { guess: string; grade: string }[];
@@ -34,7 +34,7 @@
 			? 'border-opacity-100'
 			: 'border-opacity-0'} transition-all duration-150 border-solid rounded-sm"
 	>
-		{#each { length: $settings.guesses } as _, gi}
+		{#each { length: $game.settings.guesses } as _, gi}
 			{@const g = guesses[gi]}
 			{@const boxStyle = `w-12 xs:w-16 aspect-square m-1 rounded-sm flex items-center justify-center`}
 			<div class="max-w-2xl flex">

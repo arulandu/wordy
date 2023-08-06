@@ -4,7 +4,9 @@
 </script>
 
 <div class="relative h-screen flex flex-col">
-	<Theme/>
+	<div class="absolute top-4 right-4">
+		<Theme />
+	</div>
 	<div class="flex items-center justify-center flex-grow">
 		<div class="text-center">
 			<h1 class="mb-6 scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">

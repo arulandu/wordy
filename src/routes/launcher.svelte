@@ -38,7 +38,7 @@
 				body: JSON.stringify({ boards, guesses, sequential, day, daily })
 			})
 		).json();
-		goto('/play?' + new URLSearchParams({ id: res.id }));
+		goto(`/play/${encodeURIComponent(res.id)}`);
 	};
 </script>
 

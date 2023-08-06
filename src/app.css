@@ -6,25 +6,42 @@
 
 @layer base {
   :root {
-    --color-foreground: 25 25 26;
+    --color-hue: 201;
 
-    --color-background: 240 240 240;
-    --color-primary: 51 52 50;
-    --color-secondary: 229 230 229;
-    --color-accent: 129 159 126;
+    --color-foreground: var(--color-hue), 87%, 9%;
+    --color-background: var(--color-hue), 87%, 97%;
+    --color-primary: var(--color-hue), 85%, 76%;
+    --color-secondary: var(--color-hue), 86%, 92%; /*used to be L = 89%*/
+    --color-accent: var(--color-hue), 85%, 49%;
+    /* 115, 15%, 56% */
+    /* 60, 1%, 50% */
   }
 
   .dark {
-    --color-foreground: 240 240 240;
-    --color-background: 25 25 26;
-    --color-primary: 51 52 50;
-    --color-secondary: 35 36 35;
-    --color-accent: 205 235 203;
+    --color-foreground: var(--color-hue), 87%, 97%;
+    --color-background: var(--color-hue), 87%, 9%;
+    --color-primary: var(--color-hue), 85%, 76%;
+    --color-secondary: var(--color-hue), 87%, 14%; /*used to be L = 9%*/
+    --color-accent: var(--color-hue), 85%, 79%;
+    /* 116, 44%, 86% */
+    /* 60, 2%, 80% */
   }
 }
 
 :root {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-serif;
 }
 
 * {
@@ -59,7 +76,8 @@
 }
 
 @keyframes pop {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
 

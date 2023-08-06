@@ -8,8 +8,6 @@ export const GET = (async ({ params }) => {
   const {id} = params
   const settings = fromId(id)
 
-  console.log("GET id=" + id + " answers=" + getAnswers(id))
-
   return json(settings)
 }) satisfies RequestHandler;
 

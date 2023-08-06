@@ -1,5 +1,6 @@
 import { browser } from "$app/environment";
-import { readable, writable } from "svelte/store";
+import { derived, readable, writable } from "svelte/store";
+import type { Settings } from "./api/game";
 
 export enum Theme {
   LIGHT = 'light',
@@ -18,6 +19,29 @@ export const theme = writable(Theme.LIGHT, (set) => {
 theme.subscribe((v) => {
   if(browser) {
     window.localStorage.setItem('theme', v)
+  }
+})
+
+export type Player = {
+  games: {[key: string] : Game}
+}
+
+export type Game = {
+  settings: Settings & {id: string},
+  guesses: { guess: string; grade: string }[][]
+}
+
+export const player = writable<Player>({games: {}}, (set) => {
+  if(browser) {
+    const prevStr = window.localStorage.getItem('player')
+    const val = prevStr ? JSON.parse(prevStr) : {games: {}}
+    set(val)
+  }
+})
+
+player.subscribe((v) => {
+  if(browser) {
+    window.localStorage.setItem('player', JSON.stringify(v))
   }
 })
 

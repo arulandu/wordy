@@ -9,7 +9,7 @@
 	};
 </script>
 
-<div class="absolute top-4 right-4 flex justify-center items-center">
+<div class="flex justify-center items-center">
 	<span class="" />
 	<!-- Switch Container -->
 	<button class="w-14 h-7 flex items-center bg-accent rounded-full" on:click={toggle}>
