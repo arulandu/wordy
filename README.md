@@ -1,12 +1,5 @@
 # wordy.club 
-A collection of puzzles for the wordy enthusiast.
-
-## Todo
-- [ ] Fix carousel styling issues.
-- [ ] Games with date. 
-- [ ] Randomization.
-- [ ] Mobile styling 
-
+Ever wanted to play wordle but a little different? Wordy is the ultimate word-guessing game for wordle fans. Optimize your puzzle experience with custom game settings, color themes, and infinite puzzles!
 
 ## Project Info
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
