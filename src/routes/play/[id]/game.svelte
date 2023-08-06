@@ -161,7 +161,7 @@
 			</button>
 		{/each}
 	</div>
-	<div class="mt-4 bg-secondary p-4 rounded-lg shadow-sm">
+	<div class="mt-4 rounded-md shadow-sm bg-accent bg-opacity-5 p-4">
 		<div
 			bind:this={viewer}
 			on:scroll={onViewerScroll}
@@ -189,7 +189,7 @@
 					<button
 						on:click={popChar}
 						data-key="backspace"
-						class="bg-secondary text-foreground {keyStyle}">Back</button
+						class="bg-accent bg-opacity-5 text-foreground {keyStyle}">Back</button
 					>
 				{/if}
 
@@ -198,14 +198,14 @@
 						on:click={() => pushChar(letter)}
 						data-key={letter}
 						class="{keyboardMap[letter] == '_'
-							? 'bg-secondary text-foreground'
+							? 'bg-accent bg-opacity-5 text-foreground'
 							: gradeToClass[keyboardMap[letter]] + ' text-background'} {keyStyle}"
 						>{letter.toUpperCase()}</button
 					>
 				{/each}
 
 				{#if r == 2}
-					<button on:click={enter} data-key="enter" class="bg-secondary text-foreground {keyStyle}"
+					<button on:click={enter} data-key="enter" class="bg-accent bg-opacity-5 text-foreground {keyStyle}"
 						>Enter</button
 					>
 				{/if}

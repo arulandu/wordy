@@ -55,7 +55,7 @@
 	<p>but a bit different? Join the club.</p>
 </div>
 <div
-	class="mx-auto mt-2 w-fit flex flex-col sm:flex-row items-center justify-center border border-accent border-solid p-2 rounded-md bg-accent bg-opacity-5"
+	class="mx-auto mt-2 p-2 w-fit flex flex-col sm:flex-row items-center justify-center border border-accent border-solid rounded-md bg-accent bg-opacity-5"
 >
 	<p>Play {daily ? 'the' : 'a'}</p>
 	<select
