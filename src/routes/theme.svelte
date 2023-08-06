@@ -9,8 +9,8 @@
 	};
 </script>
 
-<div class="flex items-center justify-center">
-	<input type="range" min=0 max=360 step=1 bind:value={$theme.hue} class="mr-4 w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer accent-accent"/>
+<div class="w-full flex items-center justify-between sm:justify-end">
+	<input type="range" min=0 max=360 step=1 bind:value={$theme.hue} class="mr-4 max-w-xl h-2 bg-secondary rounded-lg appearance-none cursor-pointer accent-accent"/>
 <div class="flex justify-center items-center">
 	<span class="" />
 	<!-- Switch Container -->

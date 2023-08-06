@@ -4,7 +4,7 @@
 </script>
 
 <div class="relative h-screen flex flex-col">
-	<div class="absolute top-4 right-4">
+	<div class="absolute w-full p-4">
 		<Theme />
 	</div>
 	<div class="flex items-center justify-center flex-grow">

@@ -22,7 +22,6 @@
 				</g>
 				</svg>
 		</button>
-		<Theme />
 	</div>
 	<div class="flex items-center justify-center flex-grow">
 		{#if data.settings}
