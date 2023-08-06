@@ -2,7 +2,7 @@ import { fromId } from "@/routes/api/game";
 import type { RequestHandler } from "./$types";
 import { json } from "@sveltejs/kit";
 import { getAnswers } from ".";
-import { words } from "../words";
+import { guesses } from "@/lib/words";
 
 export const GET = (async ({ params }) => {
   const {id} = params
@@ -15,7 +15,7 @@ export const PUT = (async ({request, params}) => {
   const {id} = params
   const body = await request.json();
   const guess = body.guess.toLowerCase();
-  if(words.indexOf(guess) == -1) return json({valid: false})
+  if(guesses.indexOf(guess) == -1) return json({valid: false})
 
   const answers = getAnswers(id).map(a => [...a])
   

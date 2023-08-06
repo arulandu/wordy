@@ -14,8 +14,17 @@ type Theme = {
 // TODO: switch to server side
 export const theme = writable<Theme>({mode: Mode.LIGHT, hue: 264}, (set) => {
   if(browser) {
-    const prevStr = window.localStorage.getItem('theme')
-    const val = prevStr ? JSON.parse(prevStr) : {mode: window.matchMedia('(prefers-color-scheme: dark)').matches ? Mode.DARK : Mode.LIGHT, hue: 264}
+    let val;
+    try {
+      const prev = window.localStorage.getItem('theme');
+      if(!prev) throw Error("No stored theme")
+
+      val = JSON.parse(prev)
+    } catch(e) {
+      console.error(e)
+      val = {mode: window.matchMedia('(prefers-color-scheme: dark)').matches ? Mode.DARK : Mode.LIGHT, hue: 264}
+    }
+
     set(val)
   }
 });
@@ -26,7 +35,7 @@ theme.subscribe((v) => {
   }
 })
 
-export type Player = {
+interface Player {
   games: {[key: string] : Game}
 }
 
@@ -37,8 +46,17 @@ export type Game = {
 
 export const player = writable<Player>({games: {}}, (set) => {
   if(browser) {
-    const prevStr = window.localStorage.getItem('player')
-    const val = prevStr ? JSON.parse(prevStr) : {games: {}}
+    let val;
+    try {
+      const prev = window.localStorage.getItem('player');
+      if(!prev) throw Error("No stored player")
+
+      val = JSON.parse(prev)
+    } catch(e) {
+      console.error(e)
+      val = {games: {}}
+    }
+
     set(val)
   }
 })

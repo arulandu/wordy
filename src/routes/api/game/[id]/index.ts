@@ -1,4 +1,4 @@
-import { words } from './../words';
+import { answers } from "@/lib/words";
 import { fromId, decode } from '..';
 import seedrandom from 'seedrandom';
 
@@ -7,5 +7,5 @@ export const getAnswers = (id: string) => {
   const plain = decode(id)
   const generator = seedrandom(plain)
   
-  return [...Array(settings.boards).keys()].map(() => words[Math.floor(generator() * words.length)])
+  return [...Array(settings.boards).keys()].map(() => answers[Math.floor(generator() * answers.length)])
 }
