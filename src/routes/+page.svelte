@@ -21,7 +21,7 @@
 		</p>
 		<a class="mt-2 block w-fit" href="https://github.com/Claeb101/wordy">
 			<img
-				class="h-full"
+				class="w-28 h-5"
 				src="https://img.shields.io/github/last-commit/claeb101/wordy"
 				alt="commit tag"
 			/>

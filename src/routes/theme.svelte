@@ -14,7 +14,7 @@
 <div class="flex justify-center items-center">
 	<span class="" />
 	<!-- Switch Container -->
-	<button class="w-14 h-7 flex items-center bg-accent rounded-full" on:click={toggle}>
+	<button aria-label="theme toggle" class="w-14 h-7 flex items-center bg-accent rounded-full" on:click={toggle}>
 		<!-- Switch -->
 		<div
 			class="bg-background w-8 h-8 p-1 text-accent flex items-center justify-center rounded-full shadow-md transform {toggled

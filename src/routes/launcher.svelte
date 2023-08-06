@@ -77,15 +77,17 @@
 	<p>game with</p>
 	<input
 		bind:value={boards}
+		id="boards"
 		class="m-1 max-w-[3rem] bg-background border-solid border-2 border-primary rounded-md p-1"
 	/>
-	<p>{boards > 1 ? 'boards' : 'board'} and</p>
+	<label for="boards">{boards > 1 ? 'boards' : 'board'} and</label>
 	<input
 		bind:value={guesses}
+		id="guesses"
 		class="m-1 max-w-[3rem] bg-background border-solid border-2 border-primary rounded-md p-1"
 	/>
-	<p>{guesses > 1 ? 'guesses' : 'guess'}</p>
-	<button on:click={play} class="m-1 w-5 rounded-full text-accent font-extrabold whitespace-pre ">
+	<label for="guesses">{guesses > 1 ? 'guesses' : 'guess'}</label>
+	<button aria-label="Play" on:click={play} class="m-1 w-5 rounded-full text-accent font-extrabold whitespace-pre ">
 		<svg class="w-full h-full " fill="currentColor" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" viewBox="0 0 31.143 31.143" xml:space="preserve">
 			<g>
 				<g id="c100_arrow">

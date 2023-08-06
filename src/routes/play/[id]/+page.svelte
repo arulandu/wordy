@@ -11,7 +11,7 @@
 
 <div class="relative flex flex-col py-4">
 	<div class="absolute w-full px-4 flex items-center justify-between">
-		<button on:click={() => goto('/')} class="m-1 w-5 rounded-full text-accent font-extrabold whitespace-pre rotate-180 ">
+		<button aria-label="Back to home" on:click={() => goto('/')} class="m-1 w-5 rounded-full text-accent font-extrabold whitespace-pre rotate-180 ">
 			<svg class="w-full h-full " fill="currentColor" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" viewBox="0 0 31.143 31.143" xml:space="preserve">
 				<g>
 					<g id="c100_arrow">
